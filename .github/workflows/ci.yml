@@ -23,13 +23,15 @@ jobs:
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: repo
+          skip-dirs: 'node_modules,backend/node_modules,client/node_modules'
           ignore-unfixed: true
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
 
-      - name: Upload SARIF results to GitHub Code Scanning
-        uses: github/code-scanning-action/upload-sarif@v2
+      - name: Upload SARIF results to GitHub Code Scanning (best-effort)
+        uses: github/codeql-action/upload-sarif@v2
+        continue-on-error: true
         with:
           sarif_file: 'trivy-results.sarif'
 
